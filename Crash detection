@@ -1,1 +1,74 @@
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.media.MediaRecorder;
+import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.widget.TextView;
+
+import java.io.IOException;
+
+public class CrashDetectionActivity extends AppCompatActivity implements SensorEventListener, LocationListener {
+
+    private SensorManager sensorManager;
+    private Sensor gyroscope;
+    private LocationManager locationManager;
+    private MediaRecorder mediaRecorder;
+    private boolean isRecording = false;
+    private TextView gyroscopeDataTextView, gpsDataTextView, microphoneDataTextView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_crash_detection);
+
+        gyroscopeDataTextView = findViewById(R.id.gyroscopeData);
+        gpsDataTextView = findViewById(R.id.gpsData);
+        microphoneDataTextView = findViewById(R.id.microphoneData);
+
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        // Request permissions for GPS and microphone (ensure to request necessary permissions)
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.RECORD_AUDIO}, 1);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor == gyroscope) {
+            // Gyroscope data
+            float x = event.values[0];
+            float y = event.values[1];
+            float z = event.values[2];
+            gyroscopeDataTextView.setText("Gyroscope Data: X = " + x + ", Y = " + y + ", Z = " + z);
+
+            // Need to write Implement crash detection logic with gyroscope data here
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        // GPS data
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+        gpsDataTextView.setText("GPS Data: Latitude = " + latitude + ", Longitude = " + longitude);
+
+        // Need to write Implement crash detection logic with GPS data here
+    }
+
+    // Other overridden methods for SensorEventListener and LocationListener
+
+}
 
